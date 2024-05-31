@@ -7,46 +7,45 @@ import moment from 'moment-timezone';
 
 ChartJS.register(...registerables);
 
-const timezoneOffset = -330; // Assuming the offset is -330 minutes (5 hours and 30 minutes)
+const timezoneOffset = -330; 
 
 const prepareChartData = (windActualData: any[], windForecastData: any[], horizon: number) => {
+  // const sortedWindActualData = windActualData.slice().sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+  // const sortedWindForecastData = windForecastData.slice().sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+
   const labels = Array.from(
     new Set([
-      ...windActualData.map((record: { startTime: any; }) => moment(record.startTime).add(timezoneOffset, 'minutes').toISOString()),
-      ...windForecastData.map((record: { startTime: any; }) => moment(record.startTime).add(timezoneOffset, 'minutes').toISOString()),
+      ...windActualData.map((record) => moment(record.startTime).add(timezoneOffset, 'minutes').toISOString()),
+      ...windForecastData.map((record) => moment(record.startTime).add(timezoneOffset, 'minutes').toISOString()),
     ])
-  ).sort();
+  ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    console.log("labels",labels)
+  const actualData = labels.map((label) => {
+    const record = windActualData.find((record) => moment(record.startTime).add(timezoneOffset, 'minutes').toISOString() === label);
+    return record ? record.generation : null;
+  });
+  console.log("actualdata",actualData)
+
+  const forecastData = labels.map((label) => {
+    const startTime = moment(label).utc().subtract(timezoneOffset, 'minutes');
+    console.log("st",startTime);
+    const cpt = startTime.clone().subtract(horizon, 'minutes').toISOString();
+    const record = windForecastData.find((record) => moment(record.publishTime).toISOString() === cpt);
+    console.log("record",record)
+    return record ? record.generation : null;
+  });
+  console.log("forecastData",forecastData)
 
   const actualDataset = {
     label: 'Wind Actual',
-    data: labels.map((label) => {
-      const record = windActualData.find((record: { startTime: any; }) => moment(record.startTime).add(timezoneOffset, 'minutes').toISOString() === label);
-      return record ? record.generation : null;
-    }),
+    data: actualData,
     borderColor: 'rgba(75, 192, 192, 1)',
     backgroundColor: 'rgba(75, 192, 192, 0.2)',
   };
 
   const forecastDataset = {
     label: 'Wind Forecast',
-    data: labels.map((label) => {
-      const targetPublishTime = moment(label).utc();
-      targetPublishTime.subtract(horizon, 'minutes');
-      const targetPublishTimeStr = targetPublishTime.toISOString();
-
-      const closestPublishTime = windForecastData.reduce((prev, curr) => {
-        const prevDiff = Math.abs(moment(prev.publishTime).add(timezoneOffset, 'minutes').utc().diff(targetPublishTime, 'minutes'));
-        const currDiff = Math.abs(moment(curr.publishTime).add(timezoneOffset, 'minutes').utc().diff(targetPublishTime, 'minutes'));
-        return prevDiff < currDiff ? prev : curr;
-      });
-
-      const records = windForecastData.filter((record: { startTime: any; publishTime: any; }) => moment(record.startTime).add(timezoneOffset, 'minutes').toISOString() === label && moment(record.publishTime).add(timezoneOffset, 'minutes').toISOString() === moment(closestPublishTime.publishTime).add(timezoneOffset, 'minutes').toISOString());
-      if (records.length === 0) {
-        return null;
-      }
-      const generation = closestPublishTime.generation;
-      return generation;
-    }),
+    data: forecastData,
     borderColor: 'rgba(255, 99, 132, 1)',
     backgroundColor: 'rgba(255, 99, 132, 0.2)',
   };
@@ -56,6 +55,7 @@ const prepareChartData = (windActualData: any[], windForecastData: any[], horizo
     datasets: [actualDataset, forecastDataset],
   };
 };
+
 export default function Home() {
  const [startDate, setStartDate] = useState('');
  const [endDate, setEndDate] = useState('');
@@ -134,8 +134,8 @@ export default function Home() {
             <input
               type="range"
               id="horizon"
-              min="0"
-              max="1440"
+              min="30"
+              max="2880"
               step="30"
               value={horizon}
               onChange={(e) => setHorizon(e.target.value)}
@@ -175,18 +175,7 @@ export default function Home() {
       </form>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {chartData && (
-        <div className="mb-4">
-          <div className="flex justify-between mb-4 text-gray-600">
-            <div>
-              Start Time: <span className="font-semibold">{chartData.labels[0]}</span>
-            </div>
-            <div>
-              End Time: <span className="font-semibold">{chartData.labels[chartData.labels.length - 1]}</span>
-            </div>
-            <div className="flex items-center">
-              Forecast Horizon: <span className="font-semibold ml-2">{horizon} minutes</span>
-            </div>
-          </div>
+        <div className="mb-4">          
           <Line
             data={chartData}
             options={{
@@ -217,4 +206,4 @@ export default function Home() {
     </div>
   </div>
 );
-}
+} 
