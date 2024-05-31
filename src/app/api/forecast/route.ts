@@ -23,8 +23,8 @@ export async function GET(request: Request) {
       select: { startTime: true, publishTime: true, generation: true },
       orderBy: { startTime: 'asc' },
     });
-    console.log(windActualData);
-    console.log(windForecastData);
+    // console.log(windActualData);
+    // console.log(windForecastData);
 
     return NextResponse.json({ windActualData, windForecastData }, { status: 200 });
   } catch (error) {

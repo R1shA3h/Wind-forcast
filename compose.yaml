@@ -1,19 +1,10 @@
-  version: '3.5'
-  services:
-    app:
-      build:
-        context:
-      image: wind-forecast
-      ports:  
-        - "3000:3000"
-      environment:
-        NODE_ENV: development
-      develop:
-        watch:
-          - action: sync
-            path: ./src
-            target: /app/src
-            ignore:
-              - node_modules/
-          - action: rebuild
-            path: package.json
+services:
+  app:
+    build:
+      context: .
+    image: forecast-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    
