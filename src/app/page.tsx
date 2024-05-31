@@ -1,11 +1,9 @@
 "use client";
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, registerables, registry } from 'chart.js';
+import { Chart as ChartJS, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
-import moment from 'moment-timezone';
-import 'chartjs-plugin-zoom';
-import dynamic from 'next/dynamic';
+
 
 interface RecordType {
   actual: number | null;
@@ -67,8 +65,8 @@ const prepareChartData = (windActualData: any[], windForecastData: any[], horizo
   const actualDataset = {
     label: 'Wind Actual',
     data: actual,
-    borderColor: 'rgba(0, 75, 130, 1)', 
-    backgroundColor: 'rgba(0, 75, 130, 0.2)',
+    borderColor: 'rgba(135, 206, 250, 1)', // Light blue border color
+    backgroundColor: 'rgba(135, 206, 250, 0.2)', 
     pointRadius:1.5,
     pointHoverRadius:4,
     fill:false,
@@ -276,13 +274,13 @@ return (
                 },
                 title: {
                   display: true,
-                  text: 'Time',  // Label for the x-axis
+                  text: 'Time', 
                 },
               },
               y: {
                 title: {
                   display: true,
-                  text: 'Generation',  // Label for the y-axis
+                  text: 'Generation', 
                 },
               },        
             },
