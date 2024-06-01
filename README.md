@@ -1,7 +1,6 @@
 # Weather Forecasting App
 
-Welcome to the Weather Forecasting App! This project aims to provide an intuitive understanding of the accuracy of weather forecasts, specifically focusing on the national-level wind power generation in the United Kingdom.
-
+Welcome to the Weather Forecasting App!
 ## Getting Started
 
 Follow these instructions to set up and run the app on your local machine.
