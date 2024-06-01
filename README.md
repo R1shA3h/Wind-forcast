@@ -34,7 +34,48 @@ Follow these instructions to set up and run the app on your local machine.
 
 ![image](https://github.com/R1shA3h/Wind-forcast/assets/99585764/c010b229-4f68-41c7-8c22-42a16eaac9b2)
 
-
+## File directory structure
+```bash
+├── wind-forecast
+│   ├── .next
+│   └── .vercel
+├── data
+│   ├── WINDACT.json
+│   └── WINDFORCAST.json
+├── lib
+│   └── prisma.ts
+├── node_modules
+├── prisma
+│   ├── migrations
+│   └── schema.prisma
+├── seed.js
+├── public
+├── src
+│   └── app
+│       ├── api
+│       │   └── forecast
+│       │       └── route.ts
+│       ├── favicon.ico
+│       ├── globals.css
+│       ├── layout.tsx
+│       └── page.tsx
+├── .dockerignore
+├── .env
+├── .eslintrc.json
+├── .gitignore
+├── compose.yaml
+├── Dockerfile
+├── next-env.d.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── postcss.config.mjs
+├── README.Docker.md
+├── README.md
+├── tailwind.config.ts
+└── tsconfig.json
+```
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
