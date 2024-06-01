@@ -1,12 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../../../lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  const prisma = new PrismaClient();
   const { searchParams } = new URL(request.url);
   const startDate = searchParams.get('startDate') || '';
   const endDate = searchParams.get('endDate') || '';
-  const horizon = parseInt(searchParams.get('horizon') || '0');
 
   if (!startDate || !endDate) {
     return NextResponse.json({ error: 'startDate and endDate are required.' }, { status: 400 });

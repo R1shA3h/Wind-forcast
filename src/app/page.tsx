@@ -65,7 +65,7 @@ const prepareChartData = (windActualData: any[], windForecastData: any[], horizo
   const actualDataset = {
     label: 'Wind Actual',
     data: actual,
-    borderColor: 'rgba(135, 206, 250, 1)', // Light blue border color
+    borderColor: 'rgba(135, 206, 250, 1)',
     backgroundColor: 'rgba(135, 206, 250, 0.2)', 
     pointRadius:1.5,
     pointHoverRadius:4,
