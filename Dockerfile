@@ -5,4 +5,5 @@ RUN npm install
 
 COPY . .
 EXPOSE 3000
-CMD npm run dev
+
+CMD npx prisma generate && npm run dev 
