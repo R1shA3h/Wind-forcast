@@ -4,7 +4,6 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
 
-
 interface RecordType {
   actual: number | null;
   forecast: number | null;
@@ -135,7 +134,7 @@ const chartData = prepareChartData(windActualData, windForecastData, horizon);
 
 return (
   <div className="flex flex-col bg-slate-700 min-h-screen px-4 py-8 sm:px-6 lg:px-8">
-  <h1 className="text-4xl font-bold text-white text-center mb-8">Forecast <span className='text-gradient'>Monitoring</span> App ⛅</h1>
+  <h1 className="text-4xl font-bold text-white text-center mb-8"> <span className='text-gradient'>Forecast Monitoring App</span> ⛅</h1>
   <div className="bg-white rounded-lg shadow-lg p-8 mx-auto max-w-4xl w-full">
     <form className="mb-8" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -154,20 +153,6 @@ return (
               className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                ></path>
-              </svg>
             </div>
           </div>
         </div>
@@ -186,20 +171,6 @@ return (
               className="block w-full px-4 py-3 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                ></path>
-              </svg>
             </div>
           </div>
         </div>
@@ -214,7 +185,7 @@ return (
               id="horizon"
               min="30"
               max="2880"
-              step="30"
+              step="60"
               value={horizon}
               onChange={(e) => setHorizon(parseInt(e.target.value))}
               className="flex-1 h-4 bg-gray-200 rounded-full appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -257,44 +228,97 @@ return (
     </form>
     {error && <p className="text-red-500 mb-4">{error}</p>}
     {chartData && (
-      <div className=" h-[350px] sm:h-[450px] w md:h-[375px] lg:h-[375px] xl:h-[370px]">
+      <div className=" h-[550px] sm:h-[450px] md:h-[375px] lg:h-[375px] xl:h-[370px]">
         <Line
-          data={chartData}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'hour',
-                  displayFormats: {
-                    hour: 'DD-MM, hh:mm a',
-                  },
-                },
-                title: {
-                  display: true,
-                  text: 'Time', 
-                },
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: 'Generation', 
-                },
-              },        
-            },
-            plugins: {
-              legend: {
-                position: 'top',
-              },
-              title: {
-                display: true,
-                text: 'Wind Generation',
-              },
-            },
-          }}
-        />
+  data={chartData}
+  options={{
+    scales: {
+      x: {
+        type: 'time',
+        time: {
+          unit: 'hour',
+          tooltipFormat: 'DD MMM YY, HH:mm', // Tooltip format
+          displayFormats: {
+            hour: 'HH:mm', // Time format for axis
+            day: 'DD MMM YY', // Date format for axis
+          },
+        },
+        title: {
+          display: true,
+          text: 'Time (UTC)', 
+          font: {
+            size: 16, // Larger font size for axis title
+            weight: 'bold', // Bold font weight for axis title
+            family: 'Arial, sans-serif', // Font family for axis title
+          },
+        },
+        ticks: {
+          autoSkip: true, // Ensures labels do not overlap
+          maxRotation: 0, // Prevents rotation of the labels
+          minRotation: 0, // Prevents rotation of the labels
+          padding: 20, // Add padding between labels and axis
+          font: {
+            size: 12, // Font size for labels
+            weight: 'normal', // Font weight for labels
+            family: 'Arial, sans-serif', // Font family for labels
+            // color: '#333', // Font color for labels
+          },
+          // stepSize: 4, // Increase spacing between labels
+          callback: function(value, index, values) {
+            const date = new Date(value);
+            const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            const day = date.toLocaleDateString([], { day: '2-digit' });
+            const month = date.toLocaleDateString([], { month: 'short' });
+            return [time,day,month]; // Return time and date with month name on separate lines
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Generation (MW)', 
+          font: {
+            size: 16, // Larger font size for axis title
+            weight: 'bold', // Bold font weight for axis title
+            family: 'Arial, sans-serif', // Font family for axis title
+          },
+        },
+        ticks: {
+          font: {
+            size: 12, // Font size for labels
+            weight: 'normal', // Font weight for labels
+            family: 'Arial, sans-serif', // Font family for labels
+            // color: '#333', // Font color for labels
+          },
+        },
+      },        
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            size: 14, // Font size for legend
+            weight: 'normal', // Font weight for legend
+            family: 'Arial, sans-serif', // Font family for legend
+            // color: '#333', // Font color for legend
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: 'Wind Generation',
+        font: {
+          size: 18, // Font size for chart title
+          weight: 'bold', // Bold font weight for chart title
+          family: 'Arial, sans-serif', // Font family for chart title
+        },
+      },
+    },
+  }}
+/>
+
+
       </div>
     )}
   </div>
