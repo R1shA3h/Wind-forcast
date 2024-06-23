@@ -224,11 +224,11 @@ return (
         ) : (
           'Submit'
         )}
-      </button>
+      </button> 
     </form>
     {error && <p className="text-red-500 mb-4">{error}</p>}
     {chartData && (
-      <div className=" h-[550px] sm:h-[450px] md:h-[375px] lg:h-[375px] xl:h-[370px]">
+      <div className="flex justify-center items-center self-center w-auto h-[550px] sm:h-[450px] md:h-[375px] lg:h-[375px] xl:h-[370px]">
         <Line
   data={chartData}
   options={{
